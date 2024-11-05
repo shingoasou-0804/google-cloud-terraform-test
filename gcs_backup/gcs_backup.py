@@ -7,8 +7,8 @@ storage_client = storage.Client.from_service_account_json("terraform_test_servic
 
 
 def copy_objects_between_buckets():
-    source_bucket_name = "test-chemican-backup"
-    source_blob_name = "fs .csv"
+    source_bucket_name = "test-oshin-drone-backup"
+    source_blob_name = "fs.csv"
     destination_bucket_name = "test-oshin-drone-destination-bucket"
     destination_blob_name = "destination_fs.csv"
 
