@@ -6,7 +6,7 @@ from google.cloud import storage
 storage_client = storage.Client.from_service_account_json("terraform_test_service_account_key.json")
 
 
-def copy_objects_between_buckets():
+def backup_objects_between_buckets():
     source_bucket_name = "test-oshin-drone-backup"
     source_blob_name = "fs.csv"
     destination_bucket_name = "test-oshin-drone-destination-bucket"
