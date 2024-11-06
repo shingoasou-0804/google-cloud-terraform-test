@@ -34,3 +34,6 @@ jobs:
     - name: Push Docker Image to Artifact Registry
       run: |
         docker push us-central1-docker.pkg.dev/${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}/terraform-test-repo/gcs-backup-job:latest
+    
+    - name: Deploy for Artifact Registry
+      run: gcloud run deploy terraform-test-repo --image us-central1-docker.pkg.dev/${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}/terraform-test-repo/gcs-backup-job:latest --platform managed --region us-central1 --allow-unauthenticated
