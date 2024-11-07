@@ -24,7 +24,7 @@ resource "google_cloud_run_v2_job" "gcs_copy_job" {
       }
       vpc_access {
         connector = google_vpc_access_connector.connector.id
-        egress    = "PRIVATE_RANGES_ONLY"
+        egress    = "ALL_TRAFFIC"
       }
       timeout = "3600s"
     }
