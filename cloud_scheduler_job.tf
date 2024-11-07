@@ -4,7 +4,7 @@
 resource "google_cloud_scheduler_job" "gcs_copy_scheduler" {
   for_each  = { for job in local.gcs_copy_batch_jobs : job.app_name => job }
   name      = "${each.value.app_name}_scheduler"
-  schedule  = "0 21 * * *"
+  schedule  = "0 10 * * *"
   time_zone = "Asia/Tokyo"
 
   retry_config {
