@@ -51,6 +51,15 @@ resource "google_project_iam_member" "cloud_run_jobs_admin" {
 }
 
 # --------------------------------------------------
+# IAM role for cloud_run_jobs_viewer
+# --------------------------------------------------
+resource "google_project_iam_member" "cloud_run_jobs_viewer" {
+  project = var.project_id
+  role    = "roles/run.viewer"
+  member  = "serviceAccount:${google_service_account.terraform_test_sa.email}"
+}
+
+# --------------------------------------------------
 # IAM role for service_account_user
 # --------------------------------------------------
 resource "google_project_iam_member" "service_account_user" {
