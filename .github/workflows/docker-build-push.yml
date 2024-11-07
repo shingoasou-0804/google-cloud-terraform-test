@@ -29,11 +29,11 @@ jobs:
 
     - name: Build Docker Image
       run: |
-        docker build --platform linux/amd64 -f ./gcs_backup/Dockerfile -t us-central1-docker.pkg.dev/${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}/terraform-test-repo/gcs-backup-job:latest
+        docker build --platform linux/amd64 -f ./gcs_backup/Dockerfile -t us-central1-docker.pkg.dev/${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}/terraform-test-repo/gcs-backup-job:latest ./gcs_backup
 
-    # - name: Push Docker Image to Artifact Registry
-    #   run: |
-    #     docker push us-central1-docker.pkg.dev/${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}/terraform-test-repo/gcs-backup-job:latest
+    - name: Push Docker Image to Artifact Registry
+      run: |
+        docker push us-central1-docker.pkg.dev/${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}/terraform-test-repo/gcs-backup-job:latest
     
-    - name: Deploy for Artifact Registry
-      run: gcloud run jobs deploy gcs-backup-job --source ./gcs_backup --region us-central1 --project=${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}
+    # - name: Deploy for Artifact Registry
+    #   run: gcloud run jobs deploy gcs-backup-job --source ./gcs_backup --region us-central1 --project=${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}
