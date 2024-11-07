@@ -33,20 +33,11 @@ resource "google_project_iam_member" "gcs_access" {
 }
 
 # --------------------------------------------------
-# IAM role for artifact_registry_admin
+# IAM role for artifact_registry_writer
 # --------------------------------------------------
 resource "google_project_iam_member" "artifact_registry_writer" {
   project = var.project_id
-  role    = "roles/artifactregistry.admin"
-  member  = "serviceAccount:${google_service_account.terraform_test_sa.email}"
-}
-
-# --------------------------------------------------
-# IAM role for cloud_run_jobs_admin
-# --------------------------------------------------
-resource "google_project_iam_member" "cloud_run_jobs_admin" {
-  project = var.project_id
-  role    = "roles/run.admin"
+  role    = "roles/artifactregistry.writer"
   member  = "serviceAccount:${google_service_account.terraform_test_sa.email}"
 }
 
@@ -56,6 +47,15 @@ resource "google_project_iam_member" "cloud_run_jobs_admin" {
 resource "google_project_iam_member" "cloud_run_jobs_developer" {
   project = var.project_id
   role    = "roles/run.developer"
+  member  = "serviceAccount:${google_service_account.terraform_test_sa.email}"
+}
+
+# --------------------------------------------------
+# IAM role for secret_manager_secret_accessor
+# --------------------------------------------------
+resource "google_project_iam_member" "secret_manager_secret_accessor" {
+  project = var.project_id
+  role    = "roles/secretmanager.secretAccessor"
   member  = "serviceAccount:${google_service_account.terraform_test_sa.email}"
 }
 
