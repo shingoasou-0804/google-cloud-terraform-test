@@ -42,10 +42,19 @@ resource "google_project_iam_member" "artifact_registry_writer" {
 }
 
 # --------------------------------------------------
-# IAM role for cloud_run_jobs_invoker
+# IAM role for cloud_run_jobs_admin
 # --------------------------------------------------
-resource "google_project_iam_member" "cloud_run_jobs_invoker" {
+resource "google_project_iam_member" "cloud_run_jobs_admin" {
   project = var.project_id
   role    = "roles/run.admin"
+  member  = "serviceAccount:${google_service_account.terraform_test_sa.email}"
+}
+
+# --------------------------------------------------
+# IAM role for service_account_user
+# --------------------------------------------------
+resource "google_project_iam_member" "service_account_user" {
+  project = var.project_id
+  role    = "roles/iam.serviceAccountUser"
   member  = "serviceAccount:${google_service_account.terraform_test_sa.email}"
 }
