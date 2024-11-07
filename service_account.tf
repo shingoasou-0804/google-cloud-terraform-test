@@ -33,11 +33,11 @@ resource "google_project_iam_member" "gcs_access" {
 }
 
 # --------------------------------------------------
-# IAM role for artifact_registry_writer
+# IAM role for artifact_registry_admin
 # --------------------------------------------------
 resource "google_project_iam_member" "artifact_registry_writer" {
   project = var.project_id
-  role    = "roles/artifactregistry.writer"
+  role    = "roles/artifactregistry.admin"
   member  = "serviceAccount:${google_service_account.terraform_test_sa.email}"
 }
 
