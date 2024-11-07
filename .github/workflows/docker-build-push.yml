@@ -29,7 +29,7 @@ jobs:
 
     - name: Build Docker Image
       run: |
-        docker build --platform linux/amd64 -t ./gcs_backup/ .
+        docker build --platform linux/amd64 -t ./gcs_backup/Dockerfile .
     
     - name: Tag Docker Image
       run: |
