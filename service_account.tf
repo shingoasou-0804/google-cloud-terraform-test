@@ -51,11 +51,11 @@ resource "google_project_iam_member" "cloud_run_jobs_developer" {
 }
 
 # --------------------------------------------------
-# IAM role for secret_manager_secret_accessor
+# IAM role for cloud_build_builds_editor
 # --------------------------------------------------
-resource "google_project_iam_member" "secret_manager_secret_accessor" {
+resource "google_project_iam_member" "cloud_build_builds_editor" {
   project = var.project_id
-  role    = "roles/secretmanager.secretAccessor"
+  role    = "roles/cloudbuild.builds.editor"
   member  = "serviceAccount:${google_service_account.terraform_test_sa.email}"
 }
 
