@@ -51,11 +51,11 @@ resource "google_project_iam_member" "cloud_run_jobs_admin" {
 }
 
 # --------------------------------------------------
-# IAM role for cloud_run_jobs_viewer
+# IAM role for cloud_run_jobs_developer
 # --------------------------------------------------
-resource "google_project_iam_member" "cloud_run_jobs_viewer" {
+resource "google_project_iam_member" "cloud_run_jobs_developer" {
   project = var.project_id
-  role    = "roles/run.viewer"
+  role    = "roles/run.developer"
   member  = "serviceAccount:${google_service_account.terraform_test_sa.email}"
 }
 
