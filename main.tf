@@ -32,11 +32,11 @@ variable "project_name" {
   type = string
 }
 
-variable "bucket_name" {
+variable "source_region" {
   type = string
 }
 
-variable "source_region" {
+variable "bucket_name" {
   type = string
 }
 

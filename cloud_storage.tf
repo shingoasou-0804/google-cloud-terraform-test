@@ -1,5 +1,5 @@
 # --------------------------------------------------
-# Google Cloud Storage destination bucket
+# Cloud Storage destination bucket
 # --------------------------------------------------
 resource "google_storage_bucket" "destination_bucket" {
   name          = var.bucket_name

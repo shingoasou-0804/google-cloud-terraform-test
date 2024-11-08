@@ -6,8 +6,8 @@ locals {
       args        = null
       cpu         = 2.0
       memory      = "2Gi"
-      task_count  = 5
-      parallelism = 5
+      task_count  = 3
+      parallelism = 3
     },
   ]
 }
