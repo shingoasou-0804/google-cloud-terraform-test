@@ -14,6 +14,11 @@ permissions:
 
 env:
   TERRAFORM_VERSION: "1.7.0"
+  PROJECT_ID: "generative-ai-app-426413"
+  PROJECT_NAME: terraform-test
+  SOURCE_REGION: "us-central1"
+  BUCKET_NAME: "test-oshin-drone-destination-bucket"
+  BUCKET_LOCATION: "asia-northeast1"
 
 jobs:
   preview:
@@ -39,4 +44,15 @@ jobs:
       - name: Terraform validate
         run: |
           terraform validate -no-color
+      - name: Terraform plan
+        run: |
+          terraform plan \
+            -var 'project_id=${{ env.PROJECT_ID }}' \
+            -var 'project_name=${{ env.PROJECT_NAME }}' \
+            -var 'source_region=${{ env.SOURCE_REGION }}' \
+            -var 'bucket_name=${{ env.BUCKET_NAME }}' \
+            -var 'bucket_location=${{ env.BUCKET_LOCATION }}' \
+            -input=false \
+            -no-color \
+            -detailed-exitcode
          
