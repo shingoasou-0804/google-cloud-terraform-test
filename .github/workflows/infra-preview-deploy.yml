@@ -1,0 +1,29 @@
+name: "infra preview & deploy"
+
+on:
+  push:
+    branches:
+      - 1-dev-env-and-pipeline
+    paths:
+      - .**.tf
+      - .github/workflows/**
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  TERRAFORM_VERSION: "1.7.0"
+
+jobs:
+  preview:
+    name: "Preview"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION}}

@@ -2,7 +2,7 @@
 # Cloud Run jobs
 # --------------------------------------------------
 resource "google_cloud_run_v2_job" "gcs_copy_job" {
-  for_each            = { for job in local.gcs_copy_batch_jobs : job.app_name => job }
+  for_each            = { for job in local.google_cloud_backup_batch_jobs : job.app_name => job }
   name                = each.value.app_name
   location            = var.source_region
   deletion_protection = false
@@ -12,7 +12,7 @@ resource "google_cloud_run_v2_job" "gcs_copy_job" {
     template {
       service_account = google_service_account.terraform_test_sa.email
       containers {
-        image   = "${var.source_region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.repository.repository_id}/gcs-backup-job:latest"
+        image   = "${var.source_region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.repository.repository_id}/google_cloud_backup:latest"
         command = each.value.command
         args    = each.value.args
         resources {

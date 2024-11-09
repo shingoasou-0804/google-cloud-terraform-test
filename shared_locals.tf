@@ -1,13 +1,13 @@
 locals {
-  gcs_copy_batch_jobs = [
+  google_cloud_backup_batch_jobs = [
     {
-      app_name    = "gcs-backup-job"
-      command     = ["python", "gcs_backup.py"]
-      args        = null
-      cpu         = 2.0
-      memory      = "2Gi"
-      task_count  = 3
-      parallelism = 3
+      app_name    = "google-cloud-backup"
+      command     = ["python", "main.py"]
+      args        = ["hoge", "fuga"]
+      cpu         = 1.0
+      memory      = "512Mi"
+      task_count  = 2
+      parallelism = 2
     },
   ]
 }
