@@ -27,3 +27,6 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TERRAFORM_VERSION}}
+      - name: Terraform format
+        run: |
+          terraform fmt -check
