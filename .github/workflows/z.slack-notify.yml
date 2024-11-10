@@ -29,7 +29,7 @@ jobs:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "Hello World :ghost:"
+                        "text": "Hello World!! :ghost:"
                       }
                     }
                   ]
