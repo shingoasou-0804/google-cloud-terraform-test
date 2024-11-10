@@ -113,6 +113,7 @@ jobs:
         run: |
           terraform init -no-color
       - name: Terraform apply
+        id: apply
         run: |
           terraform apply \
             -var 'project_id=${{ env.PROJECT_ID }}' \
@@ -123,3 +124,34 @@ jobs:
             -input=false \
             -no-color \
             -auto-approve
+      - name: Slack notify
+        if: always()
+        uses: slackapi/slack-github-action@v1.27.0
+        with:
+          channel-id: 'C0804B4KTDK'
+          payload: |
+            {
+              "attachments": [
+                {
+                  "blocks": [
+                    {
+                      "type": "header",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "Runner finished: ${{ steps.apply.outcome}}",
+                        "emoji": true
+                      }
+                    },
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
