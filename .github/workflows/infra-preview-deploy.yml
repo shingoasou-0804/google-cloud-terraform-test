@@ -25,14 +25,14 @@ jobs:
     name: "Preview"
     runs-on: ubuntu-latest
     outputs:
-      TF_PLAN_EXITCODE: ${{ steps.plan.outputs.exitcode }}: 
+      TF_PLAN_EXITCODE: ${{ steps.plan.outputs.exitcode }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Setup terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: ${{ env.TERRAFORM_VERSION}}
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
       - name: Terraform format
         run: |
           terraform fmt -check
