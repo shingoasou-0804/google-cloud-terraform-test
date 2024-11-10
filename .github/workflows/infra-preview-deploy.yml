@@ -59,33 +59,33 @@ jobs:
             -input=false \
             -no-color \
             -detailed-exitcode
-            - name: Slack notify
-            uses: slackapi/slack-github-action@v1.27.0
-            with:
-              channel-id: 'C0804B4KTDK'
-              payload: |
+      - name: Slack notify
+        uses: slackapi/slack-github-action@v1.27.0
+        with:
+          channel-id: 'C0804B4KTDK'
+          payload: |
+            {
+              "attachments": [
                 {
-                  "attachments": [
+                  "blocks": [
                     {
-                      "blocks": [
-                        {
-                          "type": "header",
-                          "text": {
-                            "type": "plain_text",
-                            "text": "Request for approve",
-                            "emoji": true
-                          }
-                        },
-                        {
-                          "type": "section",
-                          "text": {
-                            "type": "mrkdwn",
-                            "text": "${{ github.server_url }}/${{ github.repository }}/actions/run/${{ github.run_id }}"
-                          }
-                        }
-                      ]
+                      "type": "header",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "Request for approve",
+                        "emoji": true
+                      }
+                    },
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "${{ github.server_url }}/${{ github.repository }}/actions/run/${{ github.run_id }}"
+                      }
                     }
                   ]
                 }
+              ]
+            }
             env:
               SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
