@@ -2,8 +2,8 @@ name: "infra preview & deploy"
 
 on:
   push:
-    # branches:
-    #   - 1-dev-env-and-pipeline
+    branches:
+      - 1-dev-env-and-pipeline
     paths:
       - .github/workflows/**
   workflow_dispatch:
