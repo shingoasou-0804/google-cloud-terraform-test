@@ -89,3 +89,26 @@ jobs:
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+  deploy:
+    name: "Deploy"
+    needs: preview
+    if: needs.preview.outputs.TF_PLAN_EXITCODE == 2
+    environment: production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+      - name: Terraform format
+        run: |
+          terraform fmt -check
+      - id: "auth"
+        uses: "google-github-actions/auth@v2"
+        with:
+          credentials_json: "${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT_KEY }}"
+      - name: Terraform init
+        run: |
+          terraform init -no-color
