@@ -112,3 +112,14 @@ jobs:
       - name: Terraform init
         run: |
           terraform init -no-color
+      - name: Terraform apply
+        run: |
+          terraform apply \
+            -var 'project_id=${{ env.PROJECT_ID }}' \
+            -var 'project_name=${{ env.PROJECT_NAME }}' \
+            -var 'source_region=${{ env.SOURCE_REGION }}' \
+            -var 'bucket_name=${{ env.BUCKET_NAME }}' \
+            -var 'bucket_location=${{ env.BUCKET_LOCATION }}' \
+            -input=false \
+            -no-color \
+            -auto-approve
