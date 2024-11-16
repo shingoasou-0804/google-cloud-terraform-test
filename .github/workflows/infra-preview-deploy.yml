@@ -19,6 +19,7 @@ env:
   SOURCE_REGION: "us-central1"
   BUCKET_NAME: "test-oshin-drone-destination-bucket"
   BUCKET_LOCATION: "asia-northeast1"
+  GITHUB_REPO: "shingoasou-0804/google-cloud-terraform-test"
 
 jobs:
   preview:
@@ -60,6 +61,7 @@ jobs:
             -var 'source_region=${{ env.SOURCE_REGION }}' \
             -var 'bucket_name=${{ env.BUCKET_NAME }}' \
             -var 'bucket_location=${{ env.BUCKET_LOCATION }}' \
+            -var 'github_repository=${{ env.GITHUB_REPO }}' \
             -input=false \
             -no-color \
             -detailed-exitcode
@@ -125,6 +127,7 @@ jobs:
             -var 'source_region=${{ env.SOURCE_REGION }}' \
             -var 'bucket_name=${{ env.BUCKET_NAME }}' \
             -var 'bucket_location=${{ env.BUCKET_LOCATION }}' \
+            -var 'github_repository=${{ env.GITHUB_REPO }}' \
             -input=false \
             -no-color \
             -auto-approve
