@@ -38,8 +38,10 @@ jobs:
           terraform fmt -check
       - id: "auth"
         name: "Authenticate to Google Cloud"
-        uses: google-github-actions/auth@v2.1.7
+        uses: google-github-actions/auth@v2
         with:
+          # credentials_json: "${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT_KEY }}"
+          project_id: ${{ env.PROJECT_ID }}
           workload_identity_provider: "projects/${{ secrets.WORKLOAD_IDENTITY_PROJECT_ID }}/locations/global/workloadIdentityPools/terraform-test-pool/providers/terraform-test-provider"
           service_account: ${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT_EMAIL }}
       - name: Terraform init
