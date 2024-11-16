@@ -19,14 +19,15 @@ resource "google_iam_workload_identity_pool_provider" "terraform_test_provider" 
   description                        = "GitHub Actionsで使用"
 
   attribute_mapping = {
-    "google.subject"       = "assertion.sub",
-    "attribute.actor"      = "assertion.actor",
-    "attribute.repository" = "assertion.repository"
+    "google.subject"             = "assertion.sub",
+    "attribute.actor"            = "assertion.actor",
+    "attribute.repository"       = "assertion.repository",
+    "attribute.repository_owner" = "assertion.repository_owner"
   }
-  attribute_condition = "assertion.repository_owner == '${var.github_repository}'"
+
+  attribute_condition = "assertion.repository_owner == '${var.github_repository}'" # GitHub ORG名が正しい
 
   oidc {
-    issuer_uri        = "https://token.actions.githubusercontent.com"
-    allowed_audiences = []
+    issuer_uri = "https://token.actions.githubusercontent.com"
   }
 }
