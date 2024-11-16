@@ -42,7 +42,7 @@ jobs:
         with:
           # credentials_json: "${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT_KEY }}"
           project_id: ${{ env.PROJECT_ID }}
-          workload_identity_provider: "projects/${{ secrets.WORKLOAD_IDENTITY_PROJECT_ID }}/locations/global/workloadIdentityPools/terraform-test-pool/providers/shingoasou-0804/google-cloud-terraform-test"
+          workload_identity_provider: "projects/${{ secrets.WORKLOAD_IDENTITY_PROJECT_ID }}/locations/global/workloadIdentityPools/terraform-test-pool/providers/google-cloud-terraform-test"
           service_account: ${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT_EMAIL }}
       - name: Terraform init
         run: |
