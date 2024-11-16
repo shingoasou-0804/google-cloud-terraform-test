@@ -25,7 +25,7 @@ resource "google_iam_workload_identity_pool_provider" "terraform_test_provider" 
     "attribute.repository_owner" = "assertion.repository_owner"
   }
 
-  attribute_condition = "assertion.repository_owner == 'shingoasou-0804'" # GitHub ORG名が正しい
+  attribute_condition = "assertion.repository_owner == '${var.github_org}'"
 
   oidc {
     issuer_uri = "https://token.actions.githubusercontent.com"

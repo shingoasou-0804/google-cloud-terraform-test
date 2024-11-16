@@ -62,6 +62,7 @@ jobs:
             -var 'bucket_name=${{ env.BUCKET_NAME }}' \
             -var 'bucket_location=${{ env.BUCKET_LOCATION }}' \
             -var 'github_repository=${{ env.GITHUB_REPO }}' \
+            -var 'github_org=${{ env.GITHUB_ORG }}' \
             -input=false \
             -no-color \
             -detailed-exitcode
@@ -128,6 +129,7 @@ jobs:
             -var 'bucket_name=${{ env.BUCKET_NAME }}' \
             -var 'bucket_location=${{ env.BUCKET_LOCATION }}' \
             -var 'github_repository=${{ env.GITHUB_REPO }}' \
+            -var 'github_org=${{ env.GITHUB_ORG }}' \
             -input=false \
             -no-color \
             -auto-approve

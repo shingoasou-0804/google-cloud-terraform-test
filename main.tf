@@ -57,3 +57,7 @@ variable "bucket_location" {
 variable "github_repository" {
   type = string
 }
+
+variable "github_org" {
+  type = string
+}
