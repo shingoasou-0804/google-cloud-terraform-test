@@ -1,4 +1,11 @@
 locals {
+  services = toset([
+    "iam.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "iamcredentials.googleapis.com",
+    "sts.googleapis.com",
+  ])
+
   google_cloud_backup_batch_jobs = [
     {
       app_name    = "google-cloud-backup"

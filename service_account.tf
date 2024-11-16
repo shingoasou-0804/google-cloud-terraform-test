@@ -67,3 +67,12 @@ resource "google_project_iam_member" "service_account_user" {
   role    = "roles/iam.serviceAccountUser"
   member  = "serviceAccount:${google_service_account.terraform_test_sa.email}"
 }
+
+# --------------------------------------------------
+# IAM role for workload_identity_pool_user
+# --------------------------------------------------
+resource "google_service_account_iam_member" "workload_identity_pool_user" {
+  service_account_id = google_service_account.terraform_test_sa.name
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.terraform_test_pool.name}/attribute.repository/${var.github_repository}"
+}

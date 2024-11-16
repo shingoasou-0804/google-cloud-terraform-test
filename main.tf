@@ -17,6 +17,16 @@ provider "google" {
 }
 
 # --------------------------------------------------
+# API enable
+# --------------------------------------------------
+resource "google_project_service" "enable_api" {
+  for_each                   = local.services
+  project                    = var.project_id
+  service                    = each.value
+  disable_dependent_services = true
+}
+
+# --------------------------------------------------
 # Data
 # --------------------------------------------------
 data "google_project" "project" {}
@@ -41,5 +51,9 @@ variable "bucket_name" {
 }
 
 variable "bucket_location" {
+  type = string
+}
+
+variable "github_repository" {
   type = string
 }
