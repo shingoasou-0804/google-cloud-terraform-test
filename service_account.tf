@@ -76,3 +76,20 @@ resource "google_project_iam_member" "workload_identity_pool_user" {
   role    = "roles/iam.workloadIdentityUser"
   member  = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.terraform_test_pool.name}/attribute.repository/${var.github_repository}"
 }
+
+# --------------------------------------------------
+# Allows Cloud Pub/Sub service acccount to push BigQuery Dataset
+# --------------------------------------------------
+resource "google_project_service_identity" "pubsub" {
+  provider = google-beta
+  project  = var.project_id
+  service  = "pubsub.googleapis.com"
+}
+
+resource "google_bigquery_table_iam_member" "pubsub_sa_bigquery" {
+  dataset_id = google_bigquery_table.access_log.dataset_id
+  table_id   = google_bigquery_table.access_log.table_id
+  for_each   = toset(["roles/bigquery.metadataViewer", "roles/bigquery.dataEditor"])
+  role       = each.key
+  member     = "serviceAccount:${google_project_service_identity.pubsub.email}"
+}

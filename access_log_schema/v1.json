@@ -1,0 +1,50 @@
+[
+  {
+    "name": "timestamp",
+    "type": "TIMESTAMP"
+  },
+  {
+    "name": "id",
+    "type": "STRING"
+  },
+  {
+    "name": "traceId",
+    "type": "STRING"
+  },
+  {
+    "name": "ip",
+    "type": "STRING"
+  },
+  {
+    "name": "userAgent",
+    "type": "STRING"
+  },
+  {
+    "name": "method",
+    "type": "STRING"
+  },
+  {
+    "name": "path",
+    "type": "STRING"
+  },
+  {
+    "name": "query",
+    "type": "STRING"
+  },
+  {
+    "name": "status",
+    "type": "INTEGER"
+  },
+  {
+    "name": "duration",
+    "type": "INTEGER"
+  },
+  {
+    "name": "requestSize",
+    "type": "INTEGER"
+  },
+  {
+    "name": "responseSize",
+    "type": "INTEGER"
+  }
+]
