@@ -86,10 +86,43 @@ resource "google_project_service_identity" "pubsub" {
   service  = "pubsub.googleapis.com"
 }
 
-resource "google_bigquery_table_iam_member" "pubsub_sa_bigquery" {
+resource "google_bigquery_table_iam_member" "pubsub_sa_bigquery_access_log" {
   dataset_id = google_bigquery_table.access_log.dataset_id
   table_id   = google_bigquery_table.access_log.table_id
   for_each   = toset(["roles/bigquery.metadataViewer", "roles/bigquery.dataEditor"])
   role       = each.key
   member     = "serviceAccount:${google_project_service_identity.pubsub.email}"
+}
+
+resource "google_bigquery_table_iam_member" "pubsub_sa_bigquery_app_logs" {
+  dataset_id = google_bigquery_table.app_logs.dataset_id
+  table_id   = google_bigquery_table.app_logs.table_id
+  for_each   = toset(["roles/bigquery.metadataViewer", "roles/bigquery.dataEditor"])
+  role       = each.key
+  member     = "serviceAccount:${google_project_service_identity.pubsub.email}"
+}
+
+resource "google_bigquery_table_iam_member" "pubsub_sa_bigquery_app_logs_deadletter" {
+  dataset_id = google_bigquery_table.app_logs_deadletter.dataset_id
+  table_id   = google_bigquery_table.app_logs_deadletter.table_id
+  for_each   = toset(["roles/bigquery.metadataViewer", "roles/bigquery.dataEditor"])
+  role       = each.key
+  member     = "serviceAccount:${google_project_service_identity.pubsub.email}"
+}
+
+# --------------------------------------------------
+# Cloud Pub/Sub Topic IAM
+# --------------------------------------------------
+resource "google_pubsub_topic_iam_member" "publisher_iam" {
+  project = var.project_id
+  topic   = google_pubsub_topic.app_log_v2.name
+  role    = "roles/pubsub.publisher"
+  member  = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-pubsub.iam.gserviceaccount.com"
+}
+
+resource "google_pubsub_subscription_iam_member" "subscriber_iam" {
+  project      = var.project_id
+  subscription = google_pubsub_subscription.app_log_v2_bq.name
+  role         = "roles/pubsub.subscriber"
+  member       = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-pubsub.iam.gserviceaccount.com"
 }

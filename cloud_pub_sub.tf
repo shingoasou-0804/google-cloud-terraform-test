@@ -29,5 +29,55 @@ resource "google_pubsub_subscription" "access_log_v1_bq" {
     drop_unknown_fields = true
   }
 
-  depends_on = [google_bigquery_table_iam_member.pubsub_sa_bigquery]
+  depends_on = [google_bigquery_table_iam_member.pubsub_sa_bigquery_access_log]
+}
+
+resource "google_pubsub_schema" "app_log_schema_v2" {
+  name       = "${var.project_name}-app-log-v2"
+  type       = "AVRO"
+  definition = file("access_log_schema/pubsubtestv2.avsc")
+}
+
+resource "google_pubsub_topic" "app_log_v2" {
+  name = "${var.project_name}-app-log-v2"
+
+  schema_settings {
+    schema   = google_pubsub_schema.app_log_schema_v2.id
+    encoding = "JSON"
+  }
+}
+
+resource "google_pubsub_subscription" "app_log_v2_bq" {
+  name  = "${var.project_name}-app-log-v2-bq"
+  topic = google_pubsub_topic.app_log_v2.id
+
+  bigquery_config {
+    table            = "${var.project_id}:${google_bigquery_table.app_logs.dataset_id}.${google_bigquery_table.app_logs.table_id}"
+    use_topic_schema = true
+  }
+
+  depends_on = [google_bigquery_table_iam_member.pubsub_sa_bigquery_app_logs]
+
+  dead_letter_policy {
+    dead_letter_topic     = google_pubsub_topic.app_log_deadletter_v1.id
+    max_delivery_attempts = 5
+  }
+}
+
+resource "google_pubsub_topic" "app_log_deadletter_v1" {
+  name = "${var.project_name}-app-log-deadletter-v1"
+}
+
+resource "google_pubsub_subscription" "app_log_deadletter_v1_bq" {
+  name  = "${var.project_name}-app-log-deadletter-v1-bq"
+  topic = google_pubsub_topic.app_log_deadletter_v1.id
+
+  bigquery_config {
+    table          = "${var.project_id}:${google_bigquery_table.app_logs_deadletter.dataset_id}.${google_bigquery_table.app_logs_deadletter.table_id}"
+    write_metadata = true
+  }
+
+  depends_on = [
+    google_bigquery_table_iam_member.pubsub_sa_bigquery_app_logs_deadletter
+  ]
 }
