@@ -117,12 +117,12 @@ resource "google_pubsub_topic_iam_member" "publisher_iam" {
   project = var.project_id
   topic   = google_pubsub_topic.app_log_v2.name
   role    = "roles/pubsub.publisher"
-  member  = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-pubsub.iam.gserviceaccount.com"
+  member  = "serviceAccount:${google_service_account.terraform_test_sa.email}"
 }
 
 resource "google_pubsub_subscription_iam_member" "subscriber_iam" {
   project      = var.project_id
   subscription = google_pubsub_subscription.app_log_v2_bq.name
   role         = "roles/pubsub.subscriber"
-  member       = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-pubsub.iam.gserviceaccount.com"
+  member       = "serviceAccount:${google_service_account.terraform_test_sa.email}"
 }
