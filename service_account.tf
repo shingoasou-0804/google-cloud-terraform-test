@@ -78,6 +78,15 @@ resource "google_project_iam_member" "workload_identity_pool_user" {
 }
 
 # --------------------------------------------------
+# IAM role for test telemetry workload_identity_pool_user
+# --------------------------------------------------
+resource "google_project_iam_member" "test_telemetry_workload_identity_pool_user" {
+  project = var.project_id
+  role    = "roles/iam.workloadIdentityUser"
+  member  = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.terraform_test_pool.name}/attribute.repository/${var.github_telemetry_repo}"
+}
+
+# --------------------------------------------------
 # Allows Cloud Pub/Sub service acccount to push BigQuery Dataset
 # --------------------------------------------------
 resource "google_project_service_identity" "pubsub" {
@@ -125,4 +134,13 @@ resource "google_pubsub_subscription_iam_member" "subscriber_iam" {
   subscription = google_pubsub_subscription.app_log_v2_bq.name
   role         = "roles/pubsub.subscriber"
   member       = "serviceAccount:${google_service_account.terraform_test_sa.email}"
+}
+
+# --------------------------------------------------
+# IAM role for Cloud Trace
+# --------------------------------------------------
+resource "google_project_iam_member" "cloud_trace_agent_iam" {
+  project = var.project_id
+  role    = "roles/cloudtrace.agent"
+  member  = "serviceAccount:${google_service_account.terraform_test_sa.email}"
 }

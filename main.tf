@@ -61,3 +61,7 @@ variable "github_repository" {
 variable "github_org" {
   type = string
 }
+
+variable "github_telemetry_repo" {
+  type = string
+}
