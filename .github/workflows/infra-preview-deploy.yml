@@ -1,0 +1,166 @@
+name: "infra preview & deploy"
+
+on:
+  push:
+    branches:
+      - 1-dev-env-and-pipeline
+    paths:
+      - .github/workflows/**
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  TERRAFORM_VERSION: "1.7.0"
+  PROJECT_ID: "generative-ai-app-426413"
+  PROJECT_NAME: terraform-test
+  SOURCE_REGION: "us-central1"
+  BUCKET_NAME: "test-oshin-drone-destination-bucket"
+  BUCKET_LOCATION: "asia-northeast1"
+  GITHUB_REPO: "shingoasou-0804/google-cloud-terraform-test"
+
+jobs:
+  preview:
+    name: "Preview"
+    runs-on: ubuntu-latest
+    outputs:
+      TF_PLAN_EXITCODE: ${{ steps.plan.outputs.exitcode }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+      - name: Terraform format
+        run: |
+          terraform fmt -check
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: google-github-actions/auth@v2
+        with:
+          # credentials_json: "${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT_KEY }}"
+          project_id: ${{ env.PROJECT_ID }}
+          workload_identity_provider: "projects/${{ secrets.WORKLOAD_IDENTITY_PROJECT_ID }}/locations/global/workloadIdentityPools/terraform-test-pool/providers/terraform-test-provider"
+          service_account: ${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT_EMAIL }}
+      - name: Terraform init
+        run: |
+          terraform init -no-color
+      - name: Terraform validate
+        run: |
+          terraform validate -no-color
+      - name: Terraform plan
+        continue-on-error: true
+        id: plan
+        run: |
+          terraform plan \
+            -var 'project_id=${{ env.PROJECT_ID }}' \
+            -var 'project_name=${{ env.PROJECT_NAME }}' \
+            -var 'source_region=${{ env.SOURCE_REGION }}' \
+            -var 'bucket_name=${{ env.BUCKET_NAME }}' \
+            -var 'bucket_location=${{ env.BUCKET_LOCATION }}' \
+            -var 'github_repository=${{ env.GITHUB_REPO }}' \
+            -var 'github_org=${{ env.GITHUB_ORG }}' \
+            -input=false \
+            -no-color \
+            -detailed-exitcode
+      - name: Slack notify
+        uses: slackapi/slack-github-action@v1.27.0
+        with:
+          channel-id: 'C0804B4KTDK'
+          payload: |
+            {
+              "attachments": [
+                {
+                  "blocks": [
+                    {
+                      "type": "header",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "Request for approve",
+                        "emoji": true
+                      }
+                    },
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+  deploy:
+    name: "Deploy"
+    needs: preview
+    if: needs.preview.outputs.TF_PLAN_EXITCODE == 2
+    environment: production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+      - name: Terraform format
+        run: |
+          terraform fmt -check
+      - id: "auth"
+        uses: "google-github-actions/auth@v2"
+        with:
+          credentials_json: "${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT_KEY }}"
+      - name: Terraform init
+        run: |
+          terraform init -no-color
+      - name: Terraform apply
+        id: apply
+        run: |
+          terraform apply \
+            -var 'project_id=${{ env.PROJECT_ID }}' \
+            -var 'project_name=${{ env.PROJECT_NAME }}' \
+            -var 'source_region=${{ env.SOURCE_REGION }}' \
+            -var 'bucket_name=${{ env.BUCKET_NAME }}' \
+            -var 'bucket_location=${{ env.BUCKET_LOCATION }}' \
+            -var 'github_repository=${{ env.GITHUB_REPO }}' \
+            -var 'github_org=${{ env.GITHUB_ORG }}' \
+            -input=false \
+            -no-color \
+            -auto-approve
+      - name: Slack notify
+        if: always()
+        uses: slackapi/slack-github-action@v1.27.0
+        with:
+          channel-id: 'C0804B4KTDK'
+          payload: |
+            {
+              "attachments": [
+                {
+                  "blocks": [
+                    {
+                      "type": "header",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "Runner finished: ${{ steps.apply.outcome}}",
+                        "emoji": true
+                      }
+                    },
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

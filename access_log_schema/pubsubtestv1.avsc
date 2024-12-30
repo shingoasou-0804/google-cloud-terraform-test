@@ -1,0 +1,22 @@
+{
+  "type" : "record",
+  "name" : "Avro",
+  "fields" : [
+    {
+      "name" : "user_id",
+      "type" : "int"
+    },
+    {
+      "name" : "message",
+      "type" : "string"
+    },
+    {
+      "name" : "logged_at",
+      "type" : {"logicalType": "timestamp-micros", "type": "long"}
+    },
+    {
+      "name" : "dateday",
+      "type" : {"logicalType": "date", "type": "int"}
+    }
+  ]
+}
